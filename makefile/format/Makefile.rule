@@ -1,0 +1,14 @@
+# A rule for building a object file.
+
+fmt: fmt.o word.o line.o 
+	gcc fmt.o word.o line.o -o fmt
+
+fmt.o: fmt.c word.h line.h
+	gcc -c fmt.c -o fmt.o
+
+word.o: word.c word.h 
+	gcc -c word.c -o word.o
+ 
+line.o: line.c line.h 
+	gcc -c line.c -o line.o
+

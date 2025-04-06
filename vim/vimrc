@@ -1,0 +1,162 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Maintainer: 
+"       August.H
+"       <august.90dd@gmail.com>
+"
+" Version: 
+"       6.0 - Feb. 22, 2025
+"
+" Sections:
+"    -> vim-plug
+"    -> Colors and Fonts
+"    -> Files and backups
+"    -> Text, tab and indent related
+"    -> VIM user interface
+"    -> cscope setting for vim
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-plug
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin()
+
+Plug 'vim-airline/vim-airline'
+let g:airline#extensions#tabline#enabled = 1
+
+Plug 'scrooloose/nerdtree'
+let NERDTreeWinpos='left'
+let NERDTreeWinSize=30
+map nt :NERDTreeToggle<CR>
+
+Plug 'majutsushi/tagbar'
+let g:tagbar_width=50
+let g:tagbar_right=1
+map tb :TagbarToggle<CR>
+
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave=1
+
+Plug 'rust-lang/rust.vim'
+let g:rustfmt_autosave = 1
+let g:rust_cargo_check_tests = 1
+
+call plug#end()
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"colorscheme solarized
+
+" Enable syntax highlighting
+syntax enable
+syntax on
+
+set background=light
+
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+" Set guifont(for windows using)
+set guifont=Courier_New:h12:cANSI
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 4 spaces
+set shiftwidth=4
+set tabstop=4
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set autoindent
+set wrap "Wrap lines
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Always show current position
+set ruler
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Show matching brackets when text indicator is over them
+set showmatch
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CSCOPE settings for vim           
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has("cscope")
+
+    " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+    set cscopetag
+
+    " check cscope for definition of a symbol before checking ctags: set to 1
+    " if you want the reverse search order.
+    set csto=0
+
+    " add any cscope database in current directory
+    if filereadable("cscope.out")
+        cs add cscope.out  
+    " else add the database pointed to by environment variable 
+    elseif $CSCOPE_DB != ""
+        cs add $CSCOPE_DB
+    endif
+
+    " show msg when any other cscope db added
+    set cscopeverbose  
+
+    """"""""""""" My cscope/vim key mappings
+    "   's'   symbol: find all references to the token under cursor
+    "   'g'   global: find global definition(s) of the token under cursor
+    "   'c'   calls:  find all calls to the function name under cursor
+    "   't'   text:   find all instances of the text under cursor
+    "   'e'   egrep:  egrep search for the word under cursor
+    "   'f'   file:   open the filename under cursor
+    "   'i'   includes: find files that include the filename under cursor
+    "   'd'   called: find functions that function under cursor calls
+    nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+    nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+    nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+    nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+
+endif

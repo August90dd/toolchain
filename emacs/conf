@@ -1,0 +1,156 @@
+;; .emacs
+
+
+;; set the personal information
+(setq user-full-name "August.Tail")
+(setq user-mail-address "August, <august.90dd@gmail.com>")
+
+;; set the default-frame-list
+(setq default-frame-alist
+	`(
+	  (top . 0) (left . 0) (width . 100) (height . 50)
+	  (vertical-scroll-bars)
+          (background-color . "DarkSlateGrey")
+          (foreground-color . "Wheat")
+          (cursor-color     . "gold1")
+          (mouse-color      . "gold1")
+	 )
+)
+
+;; set the font and appearance
+(set-default-font "9x15")
+;; (menu-bar-mode -1)
+(tool-bar-mode nil)
+(blink-cursor-mode -1)                  
+(display-time-mode 1)                  
+(show-paren-mode 1)               
+
+;; inhibit-startup-message
+(setq inhibit-startup-message t) 
+
+;; mouse-avoidance
+(mouse-avoidance-mode 'animate)
+
+;; disable bell
+(setq visible-bell t)
+
+;; display the column number and line number
+(setq column-number-mode t)
+
+;; use the middle key of mouse
+(setq mouse-yank-at-point t)
+
+;; set the large kill ring
+(setq kill-ring-max 200)
+
+;; do not save backup-files 
+(setq-default make-backup-files nil)
+
+;; use y/n instead of yes or no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; set c program stype
+(add-hook 'c-mode-hook 'linux-c-mode)
+
+;; set imenu sort by nameOB
+(setq imenu-sort-function 'imenu--sort-by-name)
+(defun linux-c-mode()
+ ;; control+j instead of return key.OB
+  (define-key c-mode-map [return] 'newline-and-indent)
+  (interactive)
+ ;; set C lauguage style
+  (c-set-style "K&R")
+ ;; backspace delete some spaces
+  (c-toggle-hungry-state)
+ ;; TAB key is 8
+  (setq c-basic-offset 8)
+ ;; add function index in the index menu.
+  (imenu-add-menubar-index)
+ ;; display the function name in the state bar.
+  (which-function-mode)
+)
+
+;; set c++ program stype
+(add-hook 'c++-mode-hook 'linux-cpp-mode)
+(defun linux-cpp-mode()
+  (define-key c++-mode-map [return] 'newline-and-indent)
+  (define-key c++-mode-map [(control c) (c)] 'compile)
+  (interactive)
+  (c-set-style "K&R")
+  (c-toggle-hungry-state)
+  (setq c-basic-offset 8)
+  (imenu-add-menubar-index)
+  (which-function-mode)
+)
+
+;; display buffer name
+(setq frame-title-format "emacs@%b")
+
+;; display the image file
+(auto-image-file-mode)
+
+;; set backup functions
+(setq version-control t)
+(setq kept-new-versions 3)
+(setq delete-old-versions t)
+(setq kept-old-versions 2)
+(setq dired-kept-versions 1)
+
+;; set compile and save keys
+(defun du-onekey-compile() 
+  "Save buffers and start compile" 
+  (interactive) 
+  (save-some-buffers t) 
+  (compile compile-command)
+) 
+(global-set-key [C-f5] 'compile)
+(global-set-key [f5] 'du-onekey-compile)
+(global-set-key [f8] 'gdb)
+
+;; set GOTO line
+(global-set-key [(meta g)] 'goto-line)
+
+;; get manual 
+(global-set-key [(C-f1)] 'manual-entry)
+
+;; set cvs-examine
+(global-set-key [(C-f3)] 'cvs-examine)
+
+;; set dired
+(global-set-key [(C-f4)] 'dired)
+
+;; set eshell
+(global-set-key [f6] 'eshell)
+
+;; set TAGS key
+(global-set-key [(f7)] 'visit-tags-table)
+(global-set-key [(meta .)] '(lambda () (interactive) (lev/find-tag t)))
+(global-set-key [(meta ,)] 'delete-other-windows)
+(global-set-key [(control .)] 'lev/find-tag)
+(global-set-key [(control ,)] 'pop-tag-mark)
+;(global-set-key [(control f)] 'tags-apropos)
+(global-set-key [(control F)] 'tags-search)
+(global-set-key [(f3)] 'tags-loop-continue)
+(global-set-key (kbd "C-M-,") 'find-tag)
+(defun lev/find-tag (&optional show-only)
+  "Show tag in other window with no prompt in minibuf."
+  (interactive)
+  (let ((default (funcall (or find-tag-default-function
+                              (get major-mode 'find-tag-default-function)
+                              'find-tag-default))))
+    (if show-only
+        (progn (find-tag-other-window default)
+               (shrink-window (- (window-height) 12))
+               (recenter 1)
+               (other-window 1))
+      (find-tag default))))
+
+
+;; display the line number
+(set-scroll-bar-mode nil)   ; no scroll bar, even in x-window system (recommended)
+(require 'wb-line-number)
+(wb-line-number-toggle)
+
+;; template file
+(require 'template)
+(template-initialize)
