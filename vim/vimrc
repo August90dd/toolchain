@@ -4,7 +4,7 @@
 "       <august.90dd@gmail.com>
 "
 " Version: 
-"       6.0 - Feb. 22, 2025
+"       7.0 - Jan. 14, 2026
 "
 " Sections:
 "    -> vim-plug
@@ -13,7 +13,7 @@
 "    -> Text, tab and indent related
 "    -> VIM user interface
 "    -> cscope setting for vim
-"
+"    -> nvm settings for vim           
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -23,7 +23,12 @@
 call plug#begin()
 
 Plug 'vim-airline/vim-airline'
-let g:airline#extensions#tabline#enabled = 1
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+nnoremap <C-p> :Files<CR>
+nnoremap <leader>b :Buffers<CR>
+nnoremap <leader>f :Rg<CR>
 
 Plug 'scrooloose/nerdtree'
 let NERDTreeWinpos='left'
@@ -34,6 +39,8 @@ Plug 'majutsushi/tagbar'
 let g:tagbar_width=50
 let g:tagbar_right=1
 map tb :TagbarToggle<CR>
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 let g:go_fmt_command = "goimports"
@@ -119,7 +126,7 @@ set showmatch
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" CSCOPE settings for vim           
+" cscope settings for vim           
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("cscope")
 
@@ -160,3 +167,24 @@ if has("cscope")
     nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
 
 endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" nvm settings for vim           
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set hidden
+set updatetime=300
+set shortmess+=c
+
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ "\<Tab>"
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"

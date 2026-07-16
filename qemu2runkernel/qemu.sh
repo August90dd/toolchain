@@ -6,8 +6,8 @@ if [ $# -eq 1 ] && [ $1 == "debug" ]; then
 	DBG="-s -S"
 fi
 
-KERNEL_DIR=~/toolchain/qemu2runkernel/kernel/
-ROOTFS_DIR=~/toolchain/qemu2runkernel/rootfs/
+KERNEL_DIR=~/toolchain/qemu2runkernel/kernel/arm64
+ROOTFS_DIR=~/toolchain/qemu2runkernel/rootfs/arm64
 
 qemu-system-aarch64 \
     -M virt   \
@@ -22,6 +22,3 @@ qemu-system-aarch64 \
     -net user,hostfwd=tcp::2222-:22 \
     -nographic  \
     ${DBG}
-
-#-initrd initramfs.cpio.gz
-#-append "root=/dev/ram rdinit=/linuxrc console=ttyAMA0"
