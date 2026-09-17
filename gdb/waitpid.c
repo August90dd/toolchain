@@ -4,13 +4,12 @@
 #include <err.h>
 #include <sys/wait.h>
 
-
 int main()
 {
-	pid_t pid;
-	pid = fork();
+    pid_t pid;
+    pid = fork();
 
-	if (pid == -1)
+    if (pid == -1)
         err(EXIT_FAILURE, "fork");
 
     if (pid == 0) {
@@ -18,10 +17,9 @@ int main()
         pause(); 	
     } else {
         printf("parent PID: %d\n", getpid());
-
-	    int status;
+        int status;
         do {
-	        int ret = waitpid(pid, &status, WUNTRACED | WCONTINUED);
+            int ret = waitpid(pid, &status, WUNTRACED | WCONTINUED);
             if (ret == -1)
                 err(EXIT_FAILURE, "waitpid");
 
@@ -33,7 +31,6 @@ int main()
                 printf("Child stoped by signal %d\n", WSTOPSIG(status)); 
             else if (WIFCONTINUED(status)) 
                 printf("Child continued\n");
-
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
         exit(EXIT_SUCCESS);
     }

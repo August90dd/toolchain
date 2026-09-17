@@ -74,7 +74,7 @@
 
 
 # attach pid
-    $ sudo gdb attach pid
+    $ gdb attach pid
     执行后进程会停止, 跳到gdb执行.
 
 
@@ -107,41 +107,37 @@
 
 
 # gdb debug MultiThread
-    $ gcc -g multipthread.c -pthread
+    $ gcc -g multipthread.c
     $ gdb ./a.out
-    (gdb) i(nfo) thread             查看线程
-    (gdb) thread 2                  切换到线程2
-    (gdb) thread apply all bt       查看所有线程backtrace
-    (gdb) thread apply n bt         查看线程n的backtrace
+    (gdb) i(nfo) threadx                查看线程
+    (gdb) thread 2                      切换到线程2
+    (gdb) thread apply all bt           查看所有线程backtrace
+    (gdb) thread apply n bt             查看线程n的backtrace
 
-    (gdb) i(nfo) b(reakpoint)       查看断点
-    (gdb) b(reakpoint) n            默认针对所有线程设置断点
-    (gdb) b(reakpoint) n thread m   只针对线程m设置断点
-    (gdb) d(elete) n                删除断点
+    (gdb) i(nfo) b(reakpoint)           查看断点
+    (gdb) b(reakpoint) n                默认针对所有线程设置断点
+    (gdb) b(reakpoint) n thread m       只针对线程m设置断点
+    (gdb) d(elete) n                    删除断点
 
-    (gdb) set scheduler-locking on  锁住调度器, off放开. 
-    (gdb) c(continue)               只会让一个线程运行, 另外的线程会锁住.
+    (gdb) set scheduler-locking on/off  on锁住调度器, off放开. 
+    (gdb) c(continue)                   只会让一个线程运行, 另外的线程会锁住.
 
 
 # coredump
-    i.   $ ulimit -c unlimited   不限制core文件大小, 只会在在当前shell中生效.
-    ii.  # echo "kernel.core_pattern = /var/crash/core-%e-%p-%s" >> /etc/sysctl.conf
+    i.   ulimit -c unlimited   不限制core文件大小, 只会在在当前shell中生效.
+    ii.  echo "kernel.core_pattern = /var/crash/core-%e-%p-%t" >> /etc/sysctl.conf
             %e  添加导致产生core的命令名
             %p  添加pid
             %t  添加core文件生成时间
-    iii. # sysctl -p
-    iv.  关闭ubuntu apport.service服务
-         /etc/default/apport文件, enabled设置为0.
+    iii. sysctl -p
 
-    e.g.
-    $ gcc -g multithread.c -pthread
-    $ sudo gdb ./a.out -c /var/crash/coredump/core-a.out-4305-1608812308
-    (gdb) thread apply all bt
+    $ gcc -g coredump.c
+    $ gdb ./a.out -c /var/crash/core-a.out-4071-1789626121
 
 ## minicoredumper
-    i.  # install minicoredumper
+    i.  install minicoredumper
         /etc/minicoredumper/minicoredumper.cfg.json     配置文件
-    ii. # echo '|usr/sbin/minicoredumper %P %u %s %t %h %e' | tee /proc/sys/kernel/core_pattern
+    ii. echo '|usr/sbin/minicoredumper %P %u %s %t %h %e' | tee /proc/sys/kernel/core_pattern
 
 
 # gdb + qemu调试内核
@@ -151,6 +147,5 @@
 
 
 # with `LD_PRELOAD`
-    e.g.
     (gdb) set environment LD_PRELOAD ./lsan-helper.so
     (gdb) file a.out
